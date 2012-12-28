@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cavas Sample</title>
+</head>
+
+<body>
+
+<DivDegree style="text-align:center;">
+<canvas id="testCanvas" width="1280" height="720" style="border:2px solid #CCC;"></canvas>
+</DivDegree>
+
+<script type="text/javascript">
+var timerID;
+var CanvasWidth = 1280;	//キャンバス横サイズ
+var CanvasHeight = 720;	//キャンバス縦サイズ
+var i = 0;	//角度の初期値
+var j=0;
+var Degree =0;
+var DivDegree = 5;	//角度の増源値
+var objX = 300;	//オブジェクトのX座標
+var objY =0;
+var objDegree =0;
+var objSize = 0;
+var objColor =0;
+var objAlpha =0;
+var canvasMargin=50;
+var initialSize=40;
+var radiusX = CanvasWidth / 2 - canvasMargin;	//横の半径
+var radiusY = CanvasHeight / 2 - canvasMargin;	//縦の半径
+var CircleCount=5;
+
+var DivDegreeSin =0;
+var DivDegreeCos =0;
+
+window.onload = function() {
+	setTimer();
+};
+function setTimer(){
+	clearInterval(timerID);
+	timerID = setInterval("setMove()", 33);
+}
+function setMove(){
+	//角度調整
+	Degree += DivDegree;
+	//パラメータの計算
+
+
+
+	//描画処理
+	draw();
+}
+
+function calcPositon(){
+	DivDegreeSin = Math.sin(objDegree / 360 * 2 * Math.PI);
+	DivDegreeCos = Math.cos(objDegree / 360 * 2 * Math.PI);
+	objX = initialSize*i;	//X座標
+
+	objY = DivDegreeSin * radiusY + CanvasHeight / 2;	//Y座標
+
+	objSize= (DivDegreeSin+1)* initialSize;
+//	objColor= (DivDegreeCos+1) / 2 * 128 +64;
+
+	objAlpha = (DivDegreeCos +1) /2 ;
+}
+
+
+function draw() {
+	//キャンバスの初期処理
+	var canvas = document.getElementById('testCanvas');
+	if ( ! canvas || ! canvas.getContext ) return false;
+	//2Dコンテキスト
+	var ctx = canvas.getContext('2d');
+	//表示クリア
+	ctx.clearRect(0, 0, CanvasWidth, CanvasHeight);
+	// ctx.globalCompositeOperation = "lighter";
+
+	
+	//円を描く
+	for(i=0;i<CanvasWidth/initialSize;i++){
+
+	objDegree=Degree+i*10;
+
+	calcPositon();
+
+	objColor=255;
+
+	for(j=0;j<CircleCount;j++)
+		{
+
+			ctx.beginPath();
+			ctx.globalAlpha = objAlpha;
+			ctx.fillStyle = "rgb("+(objColor-5*j)+","+40*j+",0)";
+//	ctx.fillStyle = "#C00000";
+			ctx.arc( objX, objY, objSize-(objSize/CircleCount)*j, 0, Math.PI * 2, false);
+			ctx.fill();
+		}
+
+
+	}
+
+
+
+}
+</script>
+
+</body>
+</html>
